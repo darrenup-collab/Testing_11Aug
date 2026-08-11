@@ -19,6 +19,14 @@ jobs:
 
       - name: List repository files
         run: ls -la
-
-      - name: Security test
+      - name: Check GitHub token
+        run: |
+          if [ -n "$GITHUB_TOKEN" ]; then
+            echo "GITHUB_TOKEN is available"
+          else
+            echo "GITHUB_TOKEN is NOT available"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        - name: Security test
         run: echo "Security check passed"
