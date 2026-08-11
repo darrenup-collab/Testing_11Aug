@@ -1,4 +1,4 @@
-name: My First Security Lab
+name: Security Lab
 
 on:
   pull_request:
@@ -6,16 +6,19 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
-  test:
+  security-test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Show files
+      - name: List repository files
         run: ls -la
 
-      - name: Run test
-        run: echo "Application test passed"
+      - name: Security test
+        run: echo "Security check passed"
