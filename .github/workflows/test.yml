@@ -44,7 +44,10 @@ jobs:
       issues: write
 
     steps:
-      - name: Issue automation simulation
+      - name: Create test issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Issue job is running"
-          echo "This job has issues: write"
+          gh issue create \
+            --title "GitHub Security Lab - Permission Test" \
+            --body "This issue was created by the GitHub Actions Issue Job."
