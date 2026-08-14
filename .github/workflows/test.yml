@@ -1,56 +1,50 @@
-name: Security Lab
+name: Permission Lab
 
 on:
-  pull_request:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  security-test:
+
+  build:
+    name: Build Job
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: List repository files
-        run: ls -la
-
-      - name: Check GitHub token
+      - name: Show build permission
         run: |
-          if [ -n "$GITHUB_TOKEN" ]; then
-            echo "GITHUB_TOKEN is available"
-          else
-            echo "GITHUB_TOKEN is NOT available"
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo "Build job is running"
+          echo "This job only needs contents: read"
 
-      - name: Check repository permission
-        run: |
-          echo "Testing GitHub API access..."
-          curl -s \
-            -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/${{ github.repository }} \
-            | grep -E '"name"|"private"'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  security:
+    name: Security Job
+    runs-on: ubuntu-latest
 
-      - name: Test Secret
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Security scan simulation
         run: |
-          echo "Secret exists"
-          if [ -n "$TEST_API_KEY" ]; then
-            echo "TEST_API_KEY is available"
-          else
-            echo "TEST_API_KEY is NOT available"
-          fi
-        env:
-          TEST_API_KEY: ${{ secrets.TEST_API_KEY }}
-          
-      - name: Security test
-        run: echo "Security check passed"
+          echo "Security job is running"
+          echo "This job has security-events: write"
+
+  issue:
+    name: Issue Job
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Issue automation simulation
+        run: |
+          echo "Issue job is running"
+          echo "This job has issues: write"
